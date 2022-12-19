@@ -1,40 +1,53 @@
 import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useMemo, useState } from "react";
+import "@fontsource/lemon";
 
 import CurrencySelect from "./CurrencySelect";
-// import TimeChart from "./TimeChart";
 import TimeChart from "./TimeChart";
 
-import currencies from "../currencies"; // development data
-import latest from "../data/latest";
+import type { Ccode } from "../currencies";
 import useLatest from "../api/useLatest";
+// import latest from "../data/latest"; // development data
+import currencies from "../currencies";
+import DevDashboard from "./DevDashboard";
 
 function App() {
-  // TODO query latest when base currency changes
-  const [baseCurrency, setBaseCurrency] = useState("EUR");
+  const [baseCurrency, setBaseCurrency] = useState<Ccode>("EUR");
   const [baseAmount, setBaseAmount] = useState(100);
-  const [targetCurrency, setTargetCurrency] = useState("USD");
+  const [targetCurrency, setTargetCurrency] = useState<Ccode>("USD");
 
-  const { data, status } = useLatest(baseCurrency);
+  const { data: latest, isFetched } = useLatest(baseCurrency);
+
+  const toAmount = useMemo(
+    () => (latest ? baseAmount * latest.rates[targetCurrency] : 0),
+    [baseAmount, baseCurrency, targetCurrency]
+  );
 
   const handleBaseAmountChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const number = Number(evt.target.value);
     setBaseAmount(number);
   };
 
-  const toAmount = useMemo(
-    () => baseAmount * latest.rates[targetCurrency] || 0,
-    [baseAmount, baseCurrency, targetCurrency]
-  );
+  const inputSx = {
+    width: 200,
+    margin: 2,
+    background: "rgba(255,255,255,0.2)",
+  };
 
   return (
     <div className="app">
-      <div>forexer</div>
+      <DevDashboard />
+      <h1>forexer</h1>
       <div>
         <div>
+          <CurrencySelect
+            currency={baseCurrency}
+            setCurrency={setBaseCurrency}
+          />
           <OutlinedInput
-            sx={{ width: 200, margin: 2 }}
+            id="base-amount"
+            sx={inputSx}
             type="number"
             value={baseAmount}
             onChange={handleBaseAmountChange}
@@ -44,14 +57,17 @@ function App() {
               </InputAdornment>
             }
           />
-          <CurrencySelect
-            currency={baseCurrency}
-            setCurrency={setBaseCurrency}
-          />
         </div>
         <div>
+          <CurrencySelect
+            currency={targetCurrency}
+            setCurrency={setTargetCurrency}
+          />
           <OutlinedInput
-            sx={{ width: 200, margin: 2 }}
+            sx={{
+              ...inputSx,
+              "& fieldset": { border: "none" },
+            }}
             value={toAmount}
             disabled
             startAdornment={
@@ -59,10 +75,6 @@ function App() {
                 {currencies.find(({ code }) => code === targetCurrency)?.symbol}
               </InputAdornment>
             }
-          />
-          <CurrencySelect
-            currency={targetCurrency}
-            setCurrency={setTargetCurrency}
           />
         </div>
       </div>

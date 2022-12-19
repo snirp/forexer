@@ -1,3 +1,5 @@
+
+
 :root {
   font-family: Inter, Arial, sans-serif;
   font-size: 16px;
@@ -8,6 +10,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  color: rgba(0,0,0,0.87)
 }
 
 body {
@@ -15,6 +18,12 @@ body {
   min-width: 640px;
   height: 100vh;
   overflow-y: hidden;
+}
+
+h1 {
+  font-family: Lemon, cursive;
+  font-size: 32px;
+  color: rgb(147 148 199);
 }
 
 #root {
@@ -27,10 +36,48 @@ body {
   justify-content: space-between;
   align-items: center;
   min-height: 100%;
-background: rgb(239, 233, 255);
-  background: linear-gradient(180deg, rgba(239, 233, 255, 1) 0%, rgba(202, 204, 255, 1) 100%);
+  background: rgb(239, 233, 255);
+  background: linear-gradient(180deg, rgb(236, 230, 252) 0%, rgb(183, 185, 240) 100%);
 }
 
 .MuiSelect-select {
   display: flex !important;
+}
+
+.VictoryContainer > svg {
+  // Fix padding at the bottom of the container
+  margin-bottom: -7px;
+}
+
+.date {
+  position: absolute;
+  z-index: 999;
+  color: white;
+}
+
+.start-date {
+  left: 10px;
+  bottom: 10px;
+}
+
+.end-date {
+  right: 10px;
+  bottom: 10px;
+}
+
+.dev-dashboard {
+  border: 1px solid rgba(255,0,0,0.7);
+  border-radius: 2px;
+  background: rgba(255,0,0,0.15);
+  position: absolute;
+  z-index: 999;
+  width: 200px;
+  top: 20px;
+  right: 20px;
+  padding: 4px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
 }

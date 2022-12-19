@@ -3,6 +3,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import currencies from "../currencies";
 import type { Ccode } from "../currencies";
+import { Dispatch, SetStateAction } from "react";
 
 const mostTraded: Ccode[] = [
   "USD",
@@ -15,23 +16,28 @@ const mostTraded: Ccode[] = [
   "CHF",
 ];
 
+// Suggested list of currencies (> 5% trade volume)
+const suggestedCurrencies = currencies.filter(({ code }) =>
+  mostTraded.includes(code)
+);
+
 interface Props {
   currency: string;
-  setCurrency: (arg: string) => void;
+  setCurrency: Dispatch<SetStateAction<Ccode>>;
 }
 
 const CurrencySelect = ({ currency, setCurrency }: Props) => {
   const handleChange = (evt: SelectChangeEvent) => {
-    console.log(evt.target.value);
-    setCurrency(evt.target.value);
+    setCurrency(evt.target.value as Ccode);
   };
 
-  const suggestedCurrencies = currencies.filter(({ code }) =>
-    mostTraded.includes(code)
-  );
   return (
-    <Select value={currency} onChange={handleChange} sx={{ width: 300 }}>
-      {suggestedCurrencies.map(({ code, currency, symbol }) => (
+    <Select
+      value={currency}
+      onChange={handleChange}
+      sx={{ width: 300, background: "rgba(255,255,255,0.2)" }}
+    >
+      {suggestedCurrencies.map(({ code, currency }) => (
         <MenuItem
           value={code}
           key={code}
@@ -46,7 +52,7 @@ const CurrencySelect = ({ currency, setCurrency }: Props) => {
         </MenuItem>
       ))}
       <hr />
-      {currencies.map(({ code, currency, symbol }) => (
+      {currencies.map(({ code, currency }) => (
         <MenuItem
           value={code}
           key={code}

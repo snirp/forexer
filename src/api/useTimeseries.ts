@@ -3,6 +3,7 @@ import exchangeApi from "./exchangeApi";
 import { useQuery } from "react-query";
 
 import { Ccode } from "../currencies";
+import apiCount from "./apiCount";
 
 interface Timeseries {
   base: string;
@@ -13,14 +14,13 @@ interface Timeseries {
   timeseries: true;
 }
 
-export const useTimeseries = (code: Ccode) => {
+// Fetch all exchange rates from base currency dating back to start date
+export const useTimeseries = (code: Ccode, start_date: string) => {
   const end_date = new Date().toISOString().slice(0, 10);
-  const start = new Date();
-  start.setDate(start.getDate() - 29);
-  const start_date = start.toISOString().slice(0, 10);
   return useQuery<Timeseries, AxiosError>(
     ["timeseries", code],
     async () => {
+      apiCount.timeseries++;
       const { data } = await exchangeApi.get(
         `timeseries?base=${code}&start_date=${start_date}&end_date=${end_date}`
       );

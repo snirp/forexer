@@ -3,6 +3,7 @@ import exchangeApi from "./exchangeApi";
 import { useQuery } from "react-query";
 
 import { Ccode } from "../currencies";
+import apiCount from "./apiCount";
 
 interface Latest {
   base: Ccode;
@@ -16,6 +17,7 @@ export const useLatest = (code: Ccode) =>
   useQuery<Latest, AxiosError>(
     ["latest", code],
     async () => {
+      apiCount.latest++;
       const { data } = await exchangeApi.get(`latest?base=${code}`);
       return data;
     },
